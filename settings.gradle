@@ -1,0 +1,4 @@
+
+rootProject.name="key-manager-grpc"
+include 'playground-grpc'
+

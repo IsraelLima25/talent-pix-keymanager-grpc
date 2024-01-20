@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zupacademy.israel";
+option java_outer_classname = "KeyPix";
+option objc_class_prefix = "HLW";
+
+package br.com.zupacademy.israel;
+
+import "google/protobuf/timestamp.proto";
+
+service KeymanagerRegistrarGrpcService{
+  rpc registrar(RegistraChavePixRequest) returns (RegistraChavePixResponse){}
+}
+
+service KeymanagerRemoverGrpcService{
+  rpc remover(RemoverChavePixRequest) returns (RemoverChavePixResponseVoid){}
+}
+
+service KeymanagerConsultarGrpcService{
+  rpc consultar(ConsultarChavePixRequest) returns (ConsultarChavePixResponse){}
+}
+
+service KeymanagerListarTodasGrpcService{
+  rpc listarTodas (ListarTodasChavesPixRequest) returns (ListarTodasChavesPixResponse){}
+}
+
+enum TipoConta{
+  UNKNOW_TIPO_CONTA = 0;
+  CONTA_CORRENTE = 1;
+  CONTA_POUPANCA = 2;
+}
+
+enum TipoChave{
+  UNKNOW_TIPO_CHAVE = 0;
+  CPF = 1;
+  CELULAR = 2;
+  EMAIL = 3;
+  ALEATORIA = 4;
+}
+
+enum TipoTitular{
+  UNKNOW_TIPO_PESSOA = 0;
+  PESSOA_FISICA = 1;
+  PESSOA_JURIDICA = 2;
+}
+
+message Titular{
+  string nome = 1;
+  string documento = 2;
+  TipoTitular tipoTitular = 3;
+}
+
+message RegistraChavePixRequest{
+  string idCliente = 1;
+  TipoChave tipoChave = 2;
+  string chave = 3;
+  TipoConta tipoConta = 4;
+  Titular titular = 5;
+}
+
+message RegistraChavePixResponse{
+  string pixId = 1;
+}
+
+message RemoverChavePixRequest{
+  string pixId = 1;
+  string idCliente = 2;
+}
+
+// Nesse momento não é necessário retornar nada
+message RemoverChavePixResponseVoid{
+}
+
+message ConsultarChavePixRequest{
+  message FiltroPorPixId{
+    string clientId = 1;
+    string pixId = 2;
+  }
+
+  oneof filtro {
+    FiltroPorPixId pixId = 1;
+    string chave = 2;
+  }
+}
+
+message ConsultarChavePixResponse{
+
+  message ChavePix{
+    message ContaInfo{
+      TipoConta tipo = 1;
+      string instituicao = 2;
+      string nomeDoTitular = 3;
+      string cpfDoTitular = 4;
+      string agencia = 5;
+      string numeroDaConta = 6;
+    }
+    TipoChave tipo = 1;
+    string chave = 2;
+    ContaInfo conta = 3;
+    google.protobuf.Timestamp criadaEm = 4;
+  }
+  string clienteId = 1;
+  string pixId = 2;
+  ChavePix chave = 3;
+}
+
+message ListarTodasChavesPixRequest{
+  string clientId = 1;
+}
+
+message ListarTodasChavesPixResponse{
+
+  message ChavePix{
+    string pixId = 1;
+    string clientId = 2;
+    TipoChave tipoDeChave = 3;
+    string valorChave = 4;
+    TipoConta tipoDeConta = 5;
+    google.protobuf.Timestamp criadaEm = 6;
+  }
+
+  string clientId = 1;
+  repeated ChavePix chaves = 2;
+
+}

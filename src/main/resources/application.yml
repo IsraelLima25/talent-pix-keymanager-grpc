@@ -1,0 +1,37 @@
+micronaut:
+  application:
+    name: keyManagerGrpc
+datasources:
+  default:
+    url: ${DB_URI:`jdbc:mysql://localhost/db_keymanager_grpc?serverTimezone=America/Sao_Paulo&createDatabaseIfNotExist=true`}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:admin}
+    dialect: ${DB_DIALECT:org.hibernate.dialect.MySQL8Dialect}
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+        format_sql: true
+
+logger:
+  levels:
+    io.micronaut.transaction: DEBUG
+
+grpc:
+  server:
+    port: ${SERVER_PORT:50051}
+    keep-alive-time: 1h
+    max-inbound-message-size: 1024
+
+itau:
+  contas:
+    url: ${ITAU_URL:`http://localhost:9091`}
+bcb:
+  pix:
+    url: ${BACEN_URL:`http://localhost:8082`}
+
